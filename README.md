@@ -162,8 +162,12 @@ The CLI provides helpful error messages:
 
 ## Links
 
-- **SDK Package**: [@gatekit/sdk](https://www.npmjs.com/package/@gatekit/sdk)
-- **Documentation**: [docs.gatekit.dev](https://docs.gatekit.dev)
-- **Dashboard**: [app.gatekit.dev](https://app.gatekit.dev)
-- **GitHub**: [github.com/gatekit](https://github.com/gatekit)
+[![View on GitHub](https://img.shields.io/badge/View%20on-GitHub-blue?logo=github)](https://github.com/filipexyz/gatekit-cli)
+[![View on npm](https://img.shields.io/badge/View%20on-npm-red?logo=npm)](https://www.npmjs.com/package/@gatekit/cli)
+
+- **📦 Repository**: [github.com/filipexyz/gatekit-cli](https://github.com/filipexyz/gatekit-cli)
+- **📥 npm Package**: [@gatekit/cli](https://www.npmjs.com/package/@gatekit/cli)
+- **🔧 SDK Package**: [@gatekit/sdk](https://www.npmjs.com/package/@gatekit/sdk)
+- **📚 Documentation**: [docs.gatekit.dev](https://docs.gatekit.dev)
+- **🎛️ Dashboard**: [app.gatekit.dev](https://app.gatekit.dev)
 

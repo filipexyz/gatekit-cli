@@ -31,6 +31,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatekit/cli.git"
+    "url": "https://github.com/filipexyz/gatekit-cli.git"
+  },
+  "homepage": "https://github.com/filipexyz/gatekit-cli",
+  "bugs": {
+    "url": "https://github.com/filipexyz/gatekit-cli/issues"
   }
 }
