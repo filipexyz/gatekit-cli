@@ -1,0 +1,260 @@
+// Generated Platforms commands for GateKit CLI
+// DO NOT EDIT - This file is auto-generated from backend contracts
+
+import { Command } from 'commander';
+import { GateKit } from '@gatekit/sdk';
+import { loadConfig, formatOutput, handleError } from '../lib/utils';
+
+export function createPlatformsCommand(): Command {
+  const platforms = new Command('platforms');
+
+  platforms
+    .command('create')
+    .description('Configure a new platform integration')
+    .option('--platform <value>', 'Platform type')
+    .option('--credentials <value>', 'Platform credentials (JSON object)')
+    .option('--isActive <value>', 'Enable platform', 'true')
+    .option('--testMode <value>', 'Enable test mode')
+    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.create(options.projectSlug || 'default', {
+      platform: options.platform,
+      credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
+      isActive: options.isActive === 'true' || options.isActive === true,
+      testMode: options.testMode === 'true' || options.testMode === true
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platforms
+    .command('list')
+    .description('List configured platforms for project')
+    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.list(options.projectSlug || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platforms
+    .command('get')
+    .description('Get platform configuration details')
+    .option('--id <value>', 'Platform ID')
+    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.get(options.projectSlug || 'default', options.id || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platforms
+    .command('update')
+    .description('Update platform configuration')
+    .option('--credentials <value>', 'Updated credentials')
+    .option('--isActive <value>', 'Enable/disable platform')
+    .option('--testMode <value>', 'Enable/disable test mode')
+    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.update(options.projectSlug || 'default', options.id || 'default', {
+      credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
+      isActive: options.isActive === 'true' || options.isActive === true,
+      testMode: options.testMode === 'true' || options.testMode === true
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platforms
+    .command('delete')
+    .description('Remove platform configuration')
+    .option('--id <value>', 'Platform ID')
+    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.delete(options.projectSlug || 'default', options.id || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platforms
+    .command('register-webhook')
+    .description('Register webhook URL with platform provider')
+    .option('--id <value>', 'Platform ID')
+    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.registerWebhook(options.projectSlug || 'default', options.id || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  return platforms;
+}
+
+
+// Target pattern parsing helpers
+function parseTargetPattern(pattern: string): { platformId: string; type: string; id: string } {
+  const parts = pattern.split(':');
+  if (parts.length !== 3) {
+    throw new Error('Invalid target pattern. Expected format: platformId:type:id');
+  }
+
+  const [platformId, type, id] = parts;
+
+  if (!['user', 'channel', 'group'].includes(type)) {
+    throw new Error('Invalid target type. Must be: user, channel, or group');
+  }
+
+  return { platformId, type, id };
+}
+
+function parseTargetsPattern(pattern: string): Array<{ platformId: string; type: string; id: string }> {
+  const patterns = pattern.split(',').map(p => p.trim());
+  return patterns.map(parseTargetPattern);
+}
+
+function buildMessageDto(options: any): any {
+  const dto: any = {};
+
+  // Handle targets - priority: targets pattern > target pattern > content object
+  if (options.targets) {
+    dto.targets = parseTargetsPattern(options.targets);
+  } else if (options.target) {
+    dto.targets = [parseTargetPattern(options.target)];
+  }
+
+  // Handle content - priority: text shortcut > content object
+  if (options.text) {
+    dto.content = { text: options.text };
+  } else if (options.content) {
+    dto.content = JSON.parse(options.content);
+  }
+
+  // Handle optional fields
+  if (options.options) {
+    dto.options = JSON.parse(options.options);
+  }
+  if (options.metadata) {
+    dto.metadata = JSON.parse(options.metadata);
+  }
+
+  return dto;
+}
+
+async function checkPermissions(config: any, requiredScopes: string[]): Promise<boolean> {
+  try {
+    // We need to add a permissions method to the SDK
+    // For now, use axios directly
+    const axios = require('axios');
+    const client = axios.create({
+      baseURL: config.apiUrl,
+      headers: config.apiKey ? { 'X-API-Key': config.apiKey } : { 'Authorization': `Bearer ${config.jwtToken}` }
+    });
+
+    const response = await client.get('/api/v1/auth/whoami');
+    const userPermissions = response.data.permissions || [];
+
+    return requiredScopes.every(scope => userPermissions.includes(scope));
+  } catch {
+    return false; // Assume no permission if check fails
+  }
+}
