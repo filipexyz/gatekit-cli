@@ -1,15 +1,36 @@
 {
   "name": "@gatekit/cli",
-  "version": "0.0.1",
-  "description": "Official CLI for GateKit API",
+  "version": "1.0.0",
+  "description": "Official CLI for GateKit universal messaging gateway",
+  "main": "dist/index.js",
   "bin": {
     "gatekit": "dist/index.js"
   },
-  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@gatekit/sdk": "file:../sdk",
+    "commander": "^11.0.0",
+    "axios": "^1.6.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=4.5.0"
+  },
+  "keywords": [
+    "gatekit",
+    "cli",
+    "messaging",
+    "universal"
+  ],
+  "author": "GateKit",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/filipexyz/gatekit-cli.git"
-  },
-  "author": "GateKit",
-  "license": "MIT"
+    "url": "https://github.com/gatekit/cli.git"
+  }
 }
