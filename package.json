@@ -1,0 +1,15 @@
+{
+  "name": "@gatekit/cli",
+  "version": "0.0.1",
+  "description": "Official CLI for GateKit API",
+  "bin": {
+    "gatekit": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filipexyz/gatekit-cli.git"
+  },
+  "author": "GateKit",
+  "license": "MIT"
+}
