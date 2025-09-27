@@ -57,6 +57,23 @@ Instead of complex JSON, use simple patterns:
 
 ## Command Reference
 
+## Members
+
+### List all members of a project
+```bash
+gatekit members list my-project
+```
+
+### Add a member to a project
+```bash
+gatekit members add my-project --email user@example.com --role admin
+```
+
+### Update a member role in a project
+```bash
+gatekit members update my-project user-123 --role admin
+```
+
 ## Projects
 
 ### Create a new project
