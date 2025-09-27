@@ -87,7 +87,6 @@ export function createMembersCommand(): Command {
         const gk = new GateKit(config);
 
         const result = await gk.members.update(options.slug || 'default', options.userId || 'default', {
-      userId: options.userId,
       role: options.role
         });
 
