@@ -3,10 +3,11 @@
 // DO NOT EDIT - This file is auto-generated from backend contracts
 
 import { Command } from 'commander';
+import { createMembersCommand } from './commands/members';
 import { createProjectsCommand } from './commands/projects';
 import { createPlatformsCommand } from './commands/platforms';
 import { createMessagesCommand } from './commands/messages';
-import { createApiKeysCommand } from './commands/apikeys';
+import { createApikeysCommand } from './commands/api-keys';
 
 const program = new Command();
 
@@ -16,10 +17,11 @@ program
   .version('1.0.0');
 
 // Add permission-aware commands
+  program.addCommand(createMembersCommand());
   program.addCommand(createProjectsCommand());
   program.addCommand(createPlatformsCommand());
   program.addCommand(createMessagesCommand());
-  program.addCommand(createApiKeysCommand());
+  program.addCommand(createApikeysCommand());
 
 // Quick send command (AI-optimized)
 program

@@ -1,38 +1,62 @@
-// Generated ApiKeys commands for GateKit CLI
+// Generated Members commands for GateKit CLI
 // DO NOT EDIT - This file is auto-generated from backend contracts
 
 import { Command } from 'commander';
 import { GateKit } from '@gatekit/sdk';
 import { loadConfig, formatOutput, handleError } from '../lib/utils';
 
-export function createApiKeysCommand(): Command {
-  const apikeys = new Command('apikeys');
+export function createMembersCommand(): Command {
+  const members = new Command('members');
 
-  apikeys
-    .command('create')
-    .description('Generate a new API key')
-    .option('--name <value>', 'API key name')
-    .option('--scopes <value>', 'Comma-separated scopes')
-    .option('--expiresInDays <value>', 'Expiration in days')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+  members
+    .command('list')
+    .description('List all members of a project')
+    .option('--slug <value>', 'slug parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["keys:manage"]);
+        const hasPermission = await checkPermissions(config, ["members:read"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: keys:manage');
+          console.error('❌ Insufficient permissions. Required: members:read');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.apikeys.create(options.projectSlug || 'default', {
-      name: options.name,
-      scopes: options.scopes,
-      expiresInDays: options.expiresInDays ? parseInt(options.expiresInDays) : undefined
+        const result = await gk.members.list(options.slug || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  members
+    .command('add')
+    .description('Add a member to a project')
+    .option('--email <value>', 'Email of user to add')
+    .option('--role <value>', 'Role to assign to the member')
+    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["members:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: members:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.members.add(options.slug || 'default', {
+      email: options.email,
+      role: options.role
         });
 
         formatOutput(result, options.json);
@@ -41,25 +65,31 @@ export function createApiKeysCommand(): Command {
       }
     });
 
-  apikeys
-    .command('list')
-    .description('List all API keys for project')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+  members
+    .command('update')
+    .description('Update a member role in a project')
+    .option('--userId <value>', 'User ID of the member to update')
+    .option('--role <value>', 'New role to assign')
+    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--userId <value>', 'userId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["keys:read"]);
+        const hasPermission = await checkPermissions(config, ["members:write"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: keys:read');
+          console.error('❌ Insufficient permissions. Required: members:write');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.apikeys.list(options.projectSlug || 'default');
+        const result = await gk.members.update(options.slug || 'default', options.userId || 'default', {
+      userId: options.userId,
+      role: options.role
+        });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -67,27 +97,27 @@ export function createApiKeysCommand(): Command {
       }
     });
 
-  apikeys
-    .command('revoke')
-    .description('Revoke an API key')
-    .option('--keyId <value>', 'API key ID to revoke')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
-    .option('--keyId <value>', 'keyId parameter', undefined)
+  members
+    .command('remove')
+    .description('Remove a member from a project')
+    .option('--userId <value>', 'User ID of the member to remove')
+    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--userId <value>', 'userId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["keys:manage"]);
+        const hasPermission = await checkPermissions(config, ["members:write"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: keys:manage');
+          console.error('❌ Insufficient permissions. Required: members:write');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.apikeys.revoke(options.projectSlug || 'default', options.keyId || 'default');
+        const result = await gk.members.remove(options.slug || 'default', options.userId || 'default');
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -95,35 +125,7 @@ export function createApiKeysCommand(): Command {
       }
     });
 
-  apikeys
-    .command('roll')
-    .description('Roll an API key (generate new key, revoke old after 24h)')
-    .option('--keyId <value>', 'API key ID to roll')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
-    .option('--keyId <value>', 'keyId parameter', undefined)
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["keys:manage"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: keys:manage');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.apikeys.roll(options.projectSlug || 'default', options.keyId || 'default');
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  return apikeys;
+  return members;
 }
 
 
