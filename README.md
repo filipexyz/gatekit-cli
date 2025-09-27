@@ -86,6 +86,11 @@ gatekit projects create --name "My Project"
 gatekit projects list
 ```
 
+### Update project name, description and settings
+```bash
+gatekit projects update my-project --name "New Project Name"
+```
+
 ## Platforms
 
 ### Configure a new platform integration
@@ -135,6 +140,23 @@ gatekit keys list
 ### Revoke an API key
 ```bash
 gatekit keys revoke --keyId "key-123"
+```
+
+## Platform Logs
+
+### List platform processing logs for a project
+```bash
+gatekit platforms logs list my-project
+```
+
+### List logs for a specific platform configuration
+```bash
+gatekit platforms logs get my-project platform-id-123
+```
+
+### Get platform logs statistics and recent errors
+```bash
+gatekit platforms logs stats my-project
 ```
 
 ## Permission System
