@@ -5,8 +5,8 @@
 import { Command } from 'commander';
 import { createMembersCommand } from './commands/members';
 import { createProjectsCommand } from './commands/projects';
-import { createMessagesCommand } from './commands/messages';
 import { createPlatformsCommand } from './commands/platforms';
+import { createMessagesCommand } from './commands/messages';
 import { createApikeysCommand } from './commands/api-keys';
 import { createPlatformLogsCommand } from './commands/platform-logs';
 
@@ -20,8 +20,8 @@ program
 // Add permission-aware commands
   program.addCommand(createMembersCommand());
   program.addCommand(createProjectsCommand());
-  program.addCommand(createMessagesCommand());
   program.addCommand(createPlatformsCommand());
+  program.addCommand(createMessagesCommand());
   program.addCommand(createApikeysCommand());
   program.addCommand(createPlatformLogsCommand());
 
