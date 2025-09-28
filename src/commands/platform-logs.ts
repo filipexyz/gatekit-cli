@@ -1,78 +1,23 @@
-// Generated Projects commands for GateKit CLI
+// Generated Platform Logs commands for GateKit CLI
 // DO NOT EDIT - This file is auto-generated from backend contracts
 
 import { Command } from 'commander';
 import { GateKit } from '@gatekit/sdk';
 import { loadConfig, formatOutput, handleError } from '../lib/utils';
 
-export function createProjectsCommand(): Command {
-  const projects = new Command('projects');
+export function createPlatformLogsCommand(): Command {
+  const platformLogs = new Command('platform-logs');
 
-  projects
-    .command('create')
-    .description('Create a new project')
-    .option('--name <value>', 'Project name')
-    .option('--description <value>', 'Project description')
-    .option('--environment <value>', 'Project environment', 'development')
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["projects:write"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: projects:write');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.projects.create({
-      name: options.name,
-      description: options.description,
-      environment: options.environment
-        });
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  projects
+  platformLogs
     .command('list')
-    .description('List all projects')
-
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["projects:read"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: projects:read');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.projects.list();
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  projects
-    .command('update')
-    .description('Update project name, description and settings')
-    .option('--name <value>', 'Project name')
-    .option('--description <value>', 'Project description')
-    .option('--environment <value>', 'Project environment')
-    .option('--isDefault <value>', 'Set as default project')
+    .description('List platform processing logs for a project')
+    .option('--platform <value>', 'Filter by platform (telegram, discord)')
+    .option('--level <value>', 'Filter by log level')
+    .option('--category <value>', 'Filter by log category')
+    .option('--startDate <value>', 'Filter logs after this date (ISO 8601)')
+    .option('--endDate <value>', 'Filter logs before this date (ISO 8601)')
+    .option('--limit <value>', 'Number of logs to return (1-1000)', '100')
+    .option('--offset <value>', 'Number of logs to skip')
     .option('--slug <value>', 'slug parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -80,20 +25,15 @@ export function createProjectsCommand(): Command {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["projects:write"]);
+        const hasPermission = await checkPermissions(config, ["platforms:read"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: projects:write');
+          console.error('❌ Insufficient permissions. Required: platforms:read');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.projects.update(options.slug || 'default', {
-      name: options.name,
-      description: options.description,
-      environment: options.environment,
-      isDefault: options.isDefault === 'true' || options.isDefault === true
-        });
+        const result = await gk.platformLogs.list(options.slug || 'default');
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -101,7 +41,66 @@ export function createProjectsCommand(): Command {
       }
     });
 
-  return projects;
+  platformLogs
+    .command('get')
+    .description('List logs for a specific platform configuration')
+    .option('--level <value>', 'Filter by log level')
+    .option('--category <value>', 'Filter by log category')
+    .option('--startDate <value>', 'Filter logs after this date (ISO 8601)')
+    .option('--endDate <value>', 'Filter logs before this date (ISO 8601)')
+    .option('--limit <value>', 'Number of logs to return (1-1000)', '100')
+    .option('--offset <value>', 'Number of logs to skip')
+    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--platformId <value>', 'platformId parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platformLogs.get(options.slug || 'default', options.platformId || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platformLogs
+    .command('stats')
+    .description('Get platform logs statistics and recent errors')
+    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platformLogs.stats(options.slug || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  return platformLogs;
 }
 
 
