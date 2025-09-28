@@ -91,23 +91,6 @@ gatekit projects list
 gatekit projects update my-project --name "New Project Name"
 ```
 
-## Messages
-
-### List received messages for a project
-```bash
-gatekit messages list
-```
-
-### Get message statistics for a project
-```bash
-gatekit messages stats
-```
-
-### Get a specific message by ID
-```bash
-gatekit messages get --messageId "msg-123"
-```
-
 ## Platforms
 
 ### Configure a new platform integration
@@ -123,6 +106,23 @@ gatekit platforms list
 ### Get platform configuration details
 ```bash
 gatekit platforms get --id "platform-123"
+```
+
+## Messages
+
+### List received messages for a project
+```bash
+gatekit messages list
+```
+
+### Get message statistics for a project
+```bash
+gatekit messages stats
+```
+
+### Get a specific message by ID
+```bash
+gatekit messages get --messageId "msg-123"
 ```
 
 ## ApiKeys
