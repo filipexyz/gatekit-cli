@@ -11,7 +11,8 @@ export function createMessagesCommand(): Command {
   messages
     .command('list')
     .description('List received messages for a project')
-    .option('--platform <value>', 'Filter by platform (telegram, discord, whatsapp-evo)')
+    .option('--platformId <value>', 'Filter by platform ID')
+    .option('--platform <value>', 'Filter by platform type (telegram, discord, whatsapp-evo)')
     .option('--chatId <value>', 'Filter by chat/channel ID')
     .option('--userId <value>', 'Filter by user ID')
     .option('--startDate <value>', 'Filter messages after this date (ISO 8601)')
@@ -19,6 +20,7 @@ export function createMessagesCommand(): Command {
     .option('--limit <value>', 'Number of messages to return (1-100)', '50')
     .option('--offset <value>', 'Number of messages to skip')
     .option('--order <value>', 'Sort order (asc or desc)', 'desc')
+    .option('--raw <value>', 'Include raw platform message data')
     .option('--projectSlug <value>', 'projectSlug parameter', 'default')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -35,6 +37,7 @@ export function createMessagesCommand(): Command {
         const gk = new GateKit(config);
 
         const result = await gk.messages.list(options.projectSlug || 'default', {
+      platformId: options.platformId,
       platform: options.platform,
       chatId: options.chatId,
       userId: options.userId,
@@ -42,7 +45,8 @@ export function createMessagesCommand(): Command {
       endDate: options.endDate,
       limit: options.limit ? parseInt(options.limit) : undefined,
       offset: options.offset ? parseInt(options.offset) : undefined,
-      order: options.order
+      order: options.order,
+      raw: options.raw === 'true' || options.raw === true
         });
 
         formatOutput(result, options.json);

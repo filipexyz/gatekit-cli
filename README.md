@@ -91,23 +91,6 @@ gatekit projects list
 gatekit projects update my-project --name "New Project Name"
 ```
 
-## Platforms
-
-### Configure a new platform integration
-```bash
-gatekit platforms create --platform discord --credentials '{"token":"MTExMjIzMzQ0NTU2Njc3ODg5MA.Xx-Xxx.FakeTokenForTestingPurposesOnly123456789"}'
-```
-
-### List configured platforms for project
-```bash
-gatekit platforms list
-```
-
-### Get platform configuration details
-```bash
-gatekit platforms get --id "platform-123"
-```
-
 ## Messages
 
 ### List received messages for a project
@@ -123,6 +106,23 @@ gatekit messages stats
 ### Get a specific message by ID
 ```bash
 gatekit messages get --messageId "msg-123"
+```
+
+## Platforms
+
+### Configure a new platform integration
+```bash
+gatekit platforms create --platform discord --name "Main Discord Bot" --credentials '{"token":"YOUR_DISCORD_BOT_TOKEN"}'
+```
+
+### List configured platforms for project
+```bash
+gatekit platforms list
+```
+
+### Get platform configuration details
+```bash
+gatekit platforms get --id "platform-123"
 ```
 
 ## ApiKeys

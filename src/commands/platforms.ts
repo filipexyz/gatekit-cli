@@ -12,6 +12,8 @@ export function createPlatformsCommand(): Command {
     .command('create')
     .description('Configure a new platform integration')
     .option('--platform <value>', 'Platform type')
+    .option('--name <value>', 'Friendly name for the platform instance')
+    .option('--description <value>', 'Optional description for the platform instance')
     .option('--credentials <value>', 'Platform credentials (JSON object). Use "gatekit platforms supported" to see required fields for each platform.')
     .option('--isActive <value>', 'Enable platform', 'true')
     .option('--testMode <value>', 'Enable test mode')
@@ -32,6 +34,8 @@ export function createPlatformsCommand(): Command {
 
         const result = await gk.platforms.create(options.projectSlug || 'default', {
       platform: options.platform,
+      name: options.name,
+      description: options.description,
       credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
       isActive: options.isActive === 'true' || options.isActive === true,
       testMode: options.testMode === 'true' || options.testMode === true
@@ -100,6 +104,8 @@ export function createPlatformsCommand(): Command {
   platforms
     .command('update')
     .description('Update platform configuration')
+    .option('--name <value>', 'Updated friendly name')
+    .option('--description <value>', 'Updated description')
     .option('--credentials <value>', 'Updated credentials (JSON object)')
     .option('--isActive <value>', 'Enable/disable platform')
     .option('--testMode <value>', 'Enable/disable test mode')
@@ -120,6 +126,8 @@ export function createPlatformsCommand(): Command {
         const gk = new GateKit(config);
 
         const result = await gk.platforms.update(options.projectSlug || 'default', options.id || 'default', {
+      name: options.name,
+      description: options.description,
       credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
       isActive: options.isActive === 'true' || options.isActive === true,
       testMode: options.testMode === 'true' || options.testMode === true
