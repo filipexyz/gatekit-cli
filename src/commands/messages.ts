@@ -11,7 +11,7 @@ export function createMessagesCommand(): Command {
   messages
     .command('list')
     .description('List received messages for a project')
-    .option('--platform <value>', 'Filter by platform (telegram, discord)')
+    .option('--platform <value>', 'Filter by platform (telegram, discord, whatsapp-evo)')
     .option('--chatId <value>', 'Filter by chat/channel ID')
     .option('--userId <value>', 'Filter by user ID')
     .option('--startDate <value>', 'Filter messages after this date (ISO 8601)')

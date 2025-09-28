@@ -95,7 +95,7 @@ gatekit projects update my-project --name "New Project Name"
 
 ### Configure a new platform integration
 ```bash
-gatekit platforms create --platform discord --token "bot-token"
+gatekit platforms create --platform discord --credentials '{"token":"MTExMjIzMzQ0NTU2Njc3ODg5MA.Xx-Xxx.FakeTokenForTestingPurposesOnly123456789"}'
 ```
 
 ### List configured platforms for project
