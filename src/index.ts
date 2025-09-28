@@ -8,6 +8,7 @@ import { createProjectsCommand } from './commands/projects';
 import { createPlatformsCommand } from './commands/platforms';
 import { createMessagesCommand } from './commands/messages';
 import { createApikeysCommand } from './commands/api-keys';
+import { createPlatformLogsCommand } from './commands/platform-logs';
 
 const program = new Command();
 
@@ -22,6 +23,7 @@ program
   program.addCommand(createPlatformsCommand());
   program.addCommand(createMessagesCommand());
   program.addCommand(createApikeysCommand());
+  program.addCommand(createPlatformLogsCommand());
 
 // Quick send command (AI-optimized)
 program
@@ -37,4 +39,4 @@ program
     // Implementation here - delegate to SDK
   });
 
-program.parse();
+program.parse(process.argv);

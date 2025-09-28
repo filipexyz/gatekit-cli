@@ -12,7 +12,7 @@ export function createPlatformsCommand(): Command {
     .command('create')
     .description('Configure a new platform integration')
     .option('--platform <value>', 'Platform type')
-    .option('--credentials <value>', 'Platform credentials (JSON object)')
+    .option('--credentials <value>', 'Platform credentials (JSON object). Use "gatekit platforms supported" to see required fields for each platform.')
     .option('--isActive <value>', 'Enable platform', 'true')
     .option('--testMode <value>', 'Enable test mode')
     .option('--projectSlug <value>', 'projectSlug parameter', 'default')
@@ -100,7 +100,7 @@ export function createPlatformsCommand(): Command {
   platforms
     .command('update')
     .description('Update platform configuration')
-    .option('--credentials <value>', 'Updated credentials')
+    .option('--credentials <value>', 'Updated credentials (JSON object)')
     .option('--isActive <value>', 'Enable/disable platform')
     .option('--testMode <value>', 'Enable/disable test mode')
     .option('--projectSlug <value>', 'projectSlug parameter', 'default')
@@ -180,6 +180,56 @@ export function createPlatformsCommand(): Command {
         const gk = new GateKit(config);
 
         const result = await gk.platforms.registerWebhook(options.projectSlug || 'default', options.id || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platforms
+    .command('qr-code')
+    .description('Get QR code for WhatsApp authentication')
+    .option('--id <value>', 'WhatsApp Platform ID')
+    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["platforms:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: platforms:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.qrCode(options.projectSlug || 'default', options.id || 'default');
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  platforms
+    .command('supported')
+    .description('List supported platforms with credential requirements')
+
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        // No permissions required for this command
+
+        const gk = new GateKit(config);
+
+        const result = await gk.platforms.supported();
 
         formatOutput(result, options.json);
       } catch (error) {
