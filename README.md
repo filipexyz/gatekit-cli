@@ -57,6 +57,23 @@ Instead of complex JSON, use simple patterns:
 
 ## Command Reference
 
+## Webhooks
+
+### Create a new webhook for event notifications
+```bash
+gatekit webhooks create --name "Production Webhook" --url "https://myapp.com/webhooks" --events "message.received,message.sent,message.failed"
+```
+
+### List all webhooks for a project
+```bash
+gatekit webhooks list
+```
+
+### Get a specific webhook with delivery statistics
+```bash
+gatekit webhooks get --webhookId "webhook-123"
+```
+
 ## Members
 
 ### List all members of a project
