@@ -3,6 +3,7 @@
 // DO NOT EDIT - This file is auto-generated from backend contracts
 
 import { Command } from 'commander';
+import { createWebhooksCommand } from './commands/webhooks';
 import { createMembersCommand } from './commands/members';
 import { createProjectsCommand } from './commands/projects';
 import { createPlatformsCommand } from './commands/platforms';
@@ -18,6 +19,7 @@ program
   .version('1.0.0');
 
 // Add permission-aware commands
+  program.addCommand(createWebhooksCommand());
   program.addCommand(createMembersCommand());
   program.addCommand(createProjectsCommand());
   program.addCommand(createPlatformsCommand());
