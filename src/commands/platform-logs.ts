@@ -18,7 +18,7 @@ export function createPlatformLogsCommand(): Command {
     .option('--endDate <value>', 'Filter logs before this date (ISO 8601)')
     .option('--limit <value>', 'Number of logs to return (1-1000)', '100')
     .option('--offset <value>', 'Number of logs to skip')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -33,7 +33,7 @@ export function createPlatformLogsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platformLogs.list(options.slug || 'default');
+        const result = await gk.platformLogs.list({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -50,7 +50,7 @@ export function createPlatformLogsCommand(): Command {
     .option('--endDate <value>', 'Filter logs before this date (ISO 8601)')
     .option('--limit <value>', 'Number of logs to return (1-1000)', '100')
     .option('--offset <value>', 'Number of logs to skip')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--platformId <value>', 'platformId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -66,7 +66,7 @@ export function createPlatformLogsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platformLogs.get(options.slug || 'default', options.platformId || 'default');
+        const result = await gk.platformLogs.get(options.platformId, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -77,7 +77,7 @@ export function createPlatformLogsCommand(): Command {
   platformLogs
     .command('stats')
     .description('Get platform logs statistics and recent errors')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -92,7 +92,7 @@ export function createPlatformLogsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platformLogs.stats(options.slug || 'default');
+        const result = await gk.platformLogs.stats({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {

@@ -11,7 +11,7 @@ export function createMembersCommand(): Command {
   members
     .command('list')
     .description('List all members of a project')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -26,7 +26,7 @@ export function createMembersCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.members.list(options.slug || 'default');
+        const result = await gk.members.list({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -39,7 +39,7 @@ export function createMembersCommand(): Command {
     .description('Add a member to a project')
     .option('--email <value>', 'Email of user to add')
     .option('--role <value>', 'Role to assign to the member')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -54,9 +54,10 @@ export function createMembersCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.members.add(options.slug || 'default', {
+        const result = await gk.members.add({
       email: options.email,
-      role: options.role
+      role: options.role,
+      project: options.project || config.defaultProject
         });
 
         formatOutput(result, options.json);
@@ -70,7 +71,7 @@ export function createMembersCommand(): Command {
     .description('Update a member role in a project')
     .option('--userId <value>', 'User ID of the member to update')
     .option('--role <value>', 'New role to assign')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--userId <value>', 'userId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -86,8 +87,9 @@ export function createMembersCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.members.update(options.slug || 'default', options.userId || 'default', {
-      role: options.role
+        const result = await gk.members.update(options.userId, {
+      role: options.role,
+      project: options.project || config.defaultProject
         });
 
         formatOutput(result, options.json);
@@ -100,7 +102,7 @@ export function createMembersCommand(): Command {
     .command('remove')
     .description('Remove a member from a project')
     .option('--userId <value>', 'User ID of the member to remove')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--userId <value>', 'userId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -116,7 +118,7 @@ export function createMembersCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.members.remove(options.slug || 'default', options.userId || 'default');
+        const result = await gk.members.remove(options.userId, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {

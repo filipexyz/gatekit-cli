@@ -8,6 +8,8 @@ import { createMembersCommand } from './commands/members';
 import { createProjectsCommand } from './commands/projects';
 import { createPlatformsCommand } from './commands/platforms';
 import { createMessagesCommand } from './commands/messages';
+import { createIdentitiesCommand } from './commands/identities';
+import { createAuthCommand } from './commands/auth';
 import { createApikeysCommand } from './commands/api-keys';
 import { createPlatformLogsCommand } from './commands/platform-logs';
 
@@ -24,6 +26,8 @@ program
   program.addCommand(createProjectsCommand());
   program.addCommand(createPlatformsCommand());
   program.addCommand(createMessagesCommand());
+  program.addCommand(createIdentitiesCommand());
+  program.addCommand(createAuthCommand());
   program.addCommand(createApikeysCommand());
   program.addCommand(createPlatformLogsCommand());
 
@@ -31,7 +35,7 @@ program
 program
   .command('send')
   .description('Quick message send (AI-optimized)')
-  .requiredOption('--project <slug>', 'Project slug')
+  .requiredOption('--project <id>', 'Project ID')
   .requiredOption('--platform <id>', 'Platform ID')
   .requiredOption('--target <id>', 'Target ID')
   .requiredOption('--text <message>', 'Message text')
