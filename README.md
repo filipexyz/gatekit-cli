@@ -1,6 +1,8 @@
 # @gatekit/cli
 
-Official CLI for GateKit - Universal messaging gateway.
+Permission-aware CLI for GateKit - Universal messaging gateway.
+
+> **Auto-generated from backend contracts** - Do not edit manually
 
 ## Installation
 
@@ -8,61 +10,37 @@ Official CLI for GateKit - Universal messaging gateway.
 npm install -g @gatekit/cli
 ```
 
-## Authentication
-
-### API Key (Recommended)
-```bash
-export GATEKIT_API_KEY="gk_live_your_api_key_here"
-export GATEKIT_API_URL="https://api.gatekit.dev"
-```
-
-### Environment Setup
-```bash
-# Production
-export GATEKIT_API_URL="https://api.gatekit.dev"
-export GATEKIT_DEFAULT_PROJECT="my-project"
-
-# Local development
-export GATEKIT_API_URL="http://localhost:3000"
-export GATEKIT_DEFAULT_PROJECT="default"
-```
-
 ## Quick Start
 
 ```bash
-# Send a message (uses GATEKIT_DEFAULT_PROJECT if set)
+# Configure CLI
+gatekit config set apiUrl https://api.gatekit.dev
+gatekit config set apiKey gk_live_your_api_key_here
+gatekit config set defaultProject my-project
+
+# Send a message
 gatekit messages send \
-  --target "platformId:user:123" \
-  --text "Hello from GateKit!"
+  --target "platform-id:user:123" \
+  --text "Hello from GateKit CLI!"
 
-# Or specify project explicitly
-gatekit messages send --project my-project-id \
-  --target "platformId:user:123" \
-  --text "Hello from GateKit!"
+# List projects
+gatekit projects list --json
 
-# List received messages (uses default project)
-gatekit messages list --limit 10
-
-# Get message statistics for specific project
-gatekit messages stats --project production-project-id
+# Create a platform configuration
+gatekit platforms create \
+  --platform discord \
+  --credentials '{"token":"bot-token"}'
 ```
 
-## Revolutionary Pattern System
+## Features
 
-Instead of complex JSON, use simple patterns:
+- ✅ **Permission-aware** - Only shows commands you have access to
+- ✅ **Auto-generated** - Always synced with backend API
+- ✅ **Type-safe** - Built on @gatekit/sdk with full type safety
+- ✅ **Interactive** - Helpful prompts and error messages
+- ✅ **JSON output** - Perfect for scripting and automation
 
-```bash
-# Single target
---target "platformId:user:253191879"
-
-# Multiple targets
---targets "platform1:user:123,platform2:channel:456"
-
-# Text shortcut
---text "Your message"
-```
-
-## Command Reference
+## Commands
 
 ## ApiKeys
 
@@ -207,54 +185,62 @@ gatekit webhooks list
 gatekit webhooks get --webhookId "webhook-123"
 ```
 
-## Permission System
+## Configuration
 
-The CLI automatically checks your permissions and shows only available commands:
+The CLI stores configuration in `~/.gatekit/config.json`:
 
-```bash
-# If you lack permissions, you'll see:
-❌ Insufficient permissions. Required: messages:send
-
-# Get your current permissions:
-gatekit auth whoami
+```json
+{
+  "apiUrl": "https://api.gatekit.dev",
+  "apiKey": "gk_live_your_api_key_here",
+  "defaultProject": "my-project"
+}
 ```
 
-## Advanced Usage
+### Environment Variables
 
-### Complex Content
+You can override configuration with environment variables:
+
+- `GATEKIT_API_URL` - API URL
+- `GATEKIT_API_KEY` - API key for authentication
+- `GATEKIT_JWT_TOKEN` - JWT token (alternative to API key)
+- `GATEKIT_DEFAULT_PROJECT` - Default project ID
+
+## Authentication
+
+### API Key (Recommended)
+
 ```bash
-gatekit messages send --project my-project \
-  --target "platformId:user:123" \
-  --content '{"text":"Hello","buttons":[{"text":"Click me"}]}'
+gatekit config set apiKey gk_live_your_api_key_here
 ```
 
-### Filtering Messages
+### JWT Token
+
 ```bash
-# Filter by platform
-gatekit messages list --platform telegram
-
-# Filter by date range
-gatekit messages list --startDate "2024-01-01T00:00:00Z"
-
-# Get failed messages
-gatekit messages sent --status failed
+export GATEKIT_JWT_TOKEN="your-jwt-token"
+gatekit projects list
 ```
 
-## Error Handling
+## Scripting
 
-The CLI provides helpful error messages:
-- **Pattern validation**: Invalid target format guidance
-- **Permission errors**: Clear permission requirements
-- **API errors**: Detailed error descriptions
+The CLI supports `--json` flag for machine-readable output:
+
+```bash
+# Get projects as JSON
+gatekit projects list --json | jq '.[] | .id'
+
+# Send message and capture result
+RESULT=$(gatekit messages send --target "id:user:123" --text "Hello" --json)
+echo $RESULT | jq '.jobId'
+```
 
 ## Links
 
-[![View on GitHub](https://img.shields.io/badge/View%20on-GitHub-blue?logo=github)](https://github.com/filipexyz/gatekit-cli)
-[![View on npm](https://img.shields.io/badge/View%20on-npm-red?logo=npm)](https://www.npmjs.com/package/@gatekit/cli)
+- [Documentation](https://docs.gatekit.dev)
+- [GitHub](https://github.com/filipexyz/gatekit-cli)
+- [npm](https://www.npmjs.com/package/@gatekit/cli)
+- [Discord Community](https://discord.gg/bQPsvycW)
 
-- **📦 Repository**: [github.com/filipexyz/gatekit-cli](https://github.com/filipexyz/gatekit-cli)
-- **📥 npm Package**: [@gatekit/cli](https://www.npmjs.com/package/@gatekit/cli)
-- **🔧 SDK Package**: [@gatekit/sdk](https://www.npmjs.com/package/@gatekit/sdk)
-- **📚 Documentation**: [docs.gatekit.dev](https://docs.gatekit.dev)
-- **🎛️ Dashboard**: [app.gatekit.dev](https://app.gatekit.dev)
+## License
 
+MIT

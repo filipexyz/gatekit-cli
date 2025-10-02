@@ -18,7 +18,7 @@ const program = new Command();
 program
   .name('gatekit')
   .description('GateKit Universal Messaging Gateway CLI')
-  .version('1.0.0');
+  .version('1.2.1');
 
 // Add permission-aware commands
   program.addCommand(createApikeysCommand());
