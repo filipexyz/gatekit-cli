@@ -64,89 +64,28 @@ Instead of complex JSON, use simple patterns:
 
 ## Command Reference
 
-## Webhooks
+## ApiKeys
 
-### Create a new webhook for event notifications
+### Generate a new API key
 ```bash
-gatekit webhooks create --name "Production Webhook" --url "https://myapp.com/webhooks" --events "message.received,message.sent,message.failed"
+gatekit keys create --name "Bot Key" --scopes "messages:send,messages:read"
 ```
 
-### List all webhooks for a project
+### List all API keys for project
 ```bash
-gatekit webhooks list
+gatekit keys list
 ```
 
-### Get a specific webhook with delivery statistics
+### Revoke an API key
 ```bash
-gatekit webhooks get --webhookId "webhook-123"
+gatekit keys revoke --keyId "key-123"
 ```
 
-## Members
+## Auth
 
-### List all members of a project
+### Get current authentication context and permissions
 ```bash
-gatekit members list my-project
-```
-
-### Add a member to a project
-```bash
-gatekit members add my-project --email user@example.com --role admin
-```
-
-### Update a member role in a project
-```bash
-gatekit members update my-project user-123 --role admin
-```
-
-## Projects
-
-### Create a new project
-```bash
-gatekit projects create --name "My Project"
-```
-
-### List all projects
-```bash
-gatekit projects list
-```
-
-### Get project details
-```bash
-gatekit projects get my-project
-```
-
-## Platforms
-
-### Configure a new platform integration
-```bash
-gatekit platforms create --platform discord --name "Main Discord Bot" --credentials '{"token":"YOUR_DISCORD_BOT_TOKEN"}'
-```
-
-### List configured platforms for project
-```bash
-gatekit platforms list
-```
-
-### Get platform configuration details
-```bash
-gatekit platforms get --id "platform-123"
-```
-
-## Messages
-
-### List received messages for a project
-```bash
-gatekit messages list
-```
-
-### Get message statistics for a project
-```bash
-gatekit messages stats
-```
-
-### Get a specific message by ID
-```bash
-gatekit messages get --messageId "msg-123"
+gatekit auth whoami --help
 ```
 
 ## Identities
@@ -166,28 +105,38 @@ gatekit identities list
 gatekit identities lookup --platformId platform-123 --providerUserId discord-456
 ```
 
-## Auth
+## Members
 
-### Get current authentication context and permissions
+### List all members of a project
 ```bash
-gatekit auth whoami --help
+gatekit members list my-project
 ```
 
-## ApiKeys
-
-### Generate a new API key
+### Add a member to a project
 ```bash
-gatekit keys create --name "Bot Key" --scopes "messages:send,messages:read"
+gatekit members add my-project --email user@example.com --role admin
 ```
 
-### List all API keys for project
+### Update a member role in a project
 ```bash
-gatekit keys list
+gatekit members update my-project user-123 --role admin
 ```
 
-### Revoke an API key
+## Messages
+
+### List received messages for a project
 ```bash
-gatekit keys revoke --keyId "key-123"
+gatekit messages list
+```
+
+### Get message statistics for a project
+```bash
+gatekit messages stats
+```
+
+### Get a specific message by ID
+```bash
+gatekit messages get --messageId "msg-123"
 ```
 
 ## Platform Logs
@@ -205,6 +154,57 @@ gatekit platforms logs get my-project platform-id-123
 ### Get platform logs statistics and recent errors
 ```bash
 gatekit platforms logs stats my-project
+```
+
+## Platforms
+
+### Configure a new platform integration
+```bash
+gatekit platforms create --platform discord --name "Main Discord Bot" --credentials '{"token":"YOUR_DISCORD_BOT_TOKEN"}'
+```
+
+### List configured platforms for project
+```bash
+gatekit platforms list
+```
+
+### Get platform configuration details
+```bash
+gatekit platforms get --id "platform-123"
+```
+
+## Projects
+
+### Create a new project
+```bash
+gatekit projects create --name "My Project"
+```
+
+### List all projects
+```bash
+gatekit projects list
+```
+
+### Get project details
+```bash
+gatekit projects get my-project
+```
+
+## Webhooks
+
+### Create a new webhook for event notifications
+```bash
+gatekit webhooks create --name "Production Webhook" --url "https://myapp.com/webhooks" --events "message.received,message.sent,message.failed"
+```
+
+### List all webhooks for a project
+```bash
+gatekit webhooks list
+```
+
+### Get a specific webhook with delivery statistics
+```bash
+gatekit webhooks get --webhookId "webhook-123"
 ```
 
 ## Permission System
