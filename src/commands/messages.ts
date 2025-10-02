@@ -44,8 +44,8 @@ export function createMessagesCommand(): Command {
       userId: options.userId,
       startDate: options.startDate,
       endDate: options.endDate,
-      limit: options.limit ? parseInt(options.limit) : undefined,
-      offset: options.offset ? parseInt(options.offset) : undefined,
+      limit: options.limit ? (() => { const val = parseInt(options.limit, 10); if (isNaN(val)) throw new Error(`Invalid number for --limit: "${options.limit}"`); return val; })() : undefined,
+      offset: options.offset ? (() => { const val = parseInt(options.offset, 10); if (isNaN(val)) throw new Error(`Invalid number for --offset: "${options.offset}"`); return val; })() : undefined,
       order: options.order,
       raw: options.raw !== undefined ? (options.raw === 'true' || options.raw === true) : undefined,
       reactions: options.reactions !== undefined ? (options.reactions === 'true' || options.reactions === true) : undefined,
@@ -364,15 +364,27 @@ function buildMessageDto(options: any): any {
   if (options.text) {
     dto.content = { text: options.text };
   } else if (options.content) {
-    dto.content = JSON.parse(options.content);
+    try {
+      dto.content = JSON.parse(options.content);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --content: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
 
-  // Handle optional fields
+  // Handle optional fields with error handling
   if (options.options) {
-    dto.options = JSON.parse(options.options);
+    try {
+      dto.options = JSON.parse(options.options);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --options: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
   if (options.metadata) {
-    dto.metadata = JSON.parse(options.metadata);
+    try {
+      dto.metadata = JSON.parse(options.metadata);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --metadata: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
 
   return dto;

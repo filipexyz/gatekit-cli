@@ -32,7 +32,7 @@ export function createApikeysCommand(): Command {
         const result = await gk.apikeys.create({
       name: options.name,
       scopes: options.scopes,
-      expiresInDays: options.expiresInDays ? parseInt(options.expiresInDays) : undefined,
+      expiresInDays: options.expiresInDays ? (() => { const val = parseInt(options.expiresInDays, 10); if (isNaN(val)) throw new Error(`Invalid number for --expiresInDays: "${options.expiresInDays}"`); return val; })() : undefined,
       project: options.project || config.defaultProject
         });
 
@@ -163,15 +163,27 @@ function buildMessageDto(options: any): any {
   if (options.text) {
     dto.content = { text: options.text };
   } else if (options.content) {
-    dto.content = JSON.parse(options.content);
+    try {
+      dto.content = JSON.parse(options.content);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --content: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
 
-  // Handle optional fields
+  // Handle optional fields with error handling
   if (options.options) {
-    dto.options = JSON.parse(options.options);
+    try {
+      dto.options = JSON.parse(options.options);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --options: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
   if (options.metadata) {
-    dto.metadata = JSON.parse(options.metadata);
+    try {
+      dto.metadata = JSON.parse(options.metadata);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --metadata: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
 
   return dto;

@@ -36,7 +36,7 @@ export function createPlatformsCommand(): Command {
       platform: options.platform,
       name: options.name,
       description: options.description,
-      credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
+      credentials: options.credentials ? (() => { try { return JSON.parse(options.credentials); } catch (e) { throw new Error(`Invalid JSON for --credentials: ${e instanceof Error ? e.message : String(e)}`); } })() : undefined,
       isActive: options.isActive !== undefined ? (options.isActive === 'true' || options.isActive === true) : undefined,
       testMode: options.testMode !== undefined ? (options.testMode === 'true' || options.testMode === true) : undefined,
       project: options.project || config.defaultProject
@@ -129,7 +129,7 @@ export function createPlatformsCommand(): Command {
         const result = await gk.platforms.update(options.id, {
       name: options.name,
       description: options.description,
-      credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
+      credentials: options.credentials ? (() => { try { return JSON.parse(options.credentials); } catch (e) { throw new Error(`Invalid JSON for --credentials: ${e instanceof Error ? e.message : String(e)}`); } })() : undefined,
       isActive: options.isActive !== undefined ? (options.isActive === 'true' || options.isActive === true) : undefined,
       testMode: options.testMode !== undefined ? (options.testMode === 'true' || options.testMode === true) : undefined,
       project: options.project || config.defaultProject
@@ -286,15 +286,27 @@ function buildMessageDto(options: any): any {
   if (options.text) {
     dto.content = { text: options.text };
   } else if (options.content) {
-    dto.content = JSON.parse(options.content);
+    try {
+      dto.content = JSON.parse(options.content);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --content: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
 
-  // Handle optional fields
+  // Handle optional fields with error handling
   if (options.options) {
-    dto.options = JSON.parse(options.options);
+    try {
+      dto.options = JSON.parse(options.options);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --options: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
   if (options.metadata) {
-    dto.metadata = JSON.parse(options.metadata);
+    try {
+      dto.metadata = JSON.parse(options.metadata);
+    } catch (e) {
+      throw new Error(`Invalid JSON for --metadata: ${e instanceof Error ? e.message : String(e)}`);
+    }
   }
 
   return dto;
