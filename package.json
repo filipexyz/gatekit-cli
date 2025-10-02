@@ -1,6 +1,6 @@
 {
   "name": "@gatekit/cli",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "Official CLI for GateKit universal messaging gateway",
   "main": "dist/index.js",
   "bin": {
@@ -14,9 +14,9 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@gatekit/sdk": "file:../sdk",
-    "commander": "^11.0.0",
-    "axios": "^1.6.0"
+    "@gatekit/sdk": "^1.2.1",
+    "axios": "^1.6.0",
+    "commander": "^11.0.0"
   },
   "peerDependencies": {
     "typescript": ">=4.5.0"

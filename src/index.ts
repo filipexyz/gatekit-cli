@@ -3,15 +3,15 @@
 // DO NOT EDIT - This file is auto-generated from backend contracts
 
 import { Command } from 'commander';
-import { createWebhooksCommand } from './commands/webhooks';
-import { createMembersCommand } from './commands/members';
-import { createProjectsCommand } from './commands/projects';
-import { createPlatformsCommand } from './commands/platforms';
-import { createMessagesCommand } from './commands/messages';
-import { createIdentitiesCommand } from './commands/identities';
-import { createAuthCommand } from './commands/auth';
 import { createApikeysCommand } from './commands/api-keys';
+import { createAuthCommand } from './commands/auth';
+import { createIdentitiesCommand } from './commands/identities';
+import { createMembersCommand } from './commands/members';
+import { createMessagesCommand } from './commands/messages';
 import { createPlatformLogsCommand } from './commands/platform-logs';
+import { createPlatformsCommand } from './commands/platforms';
+import { createProjectsCommand } from './commands/projects';
+import { createWebhooksCommand } from './commands/webhooks';
 
 const program = new Command();
 
@@ -21,15 +21,15 @@ program
   .version('1.0.0');
 
 // Add permission-aware commands
-  program.addCommand(createWebhooksCommand());
-  program.addCommand(createMembersCommand());
-  program.addCommand(createProjectsCommand());
-  program.addCommand(createPlatformsCommand());
-  program.addCommand(createMessagesCommand());
-  program.addCommand(createIdentitiesCommand());
-  program.addCommand(createAuthCommand());
   program.addCommand(createApikeysCommand());
+  program.addCommand(createAuthCommand());
+  program.addCommand(createIdentitiesCommand());
+  program.addCommand(createMembersCommand());
+  program.addCommand(createMessagesCommand());
   program.addCommand(createPlatformLogsCommand());
+  program.addCommand(createPlatformsCommand());
+  program.addCommand(createProjectsCommand());
+  program.addCommand(createWebhooksCommand());
 
 // Quick send command (AI-optimized)
 program
