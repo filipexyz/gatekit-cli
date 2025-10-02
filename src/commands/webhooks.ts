@@ -13,9 +13,9 @@ export function createWebhooksCommand(): Command {
     .description('Create a new webhook for event notifications')
     .option('--name <value>', 'Friendly name for the webhook')
     .option('--url <value>', 'Target URL for webhook delivery')
-    .option('--events <value>', 'Events to subscribe to (comma-separated: message.received,message.sent,message.failed)')
+    .option('--events <value>', 'Events to subscribe to (comma-separated: message.received,message.sent,message.failed,button.clicked,reaction.added,reaction.removed)')
     .option('--secret <value>', 'Custom webhook secret (auto-generated if not provided)')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -30,11 +30,12 @@ export function createWebhooksCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.webhooks.create(options.projectSlug || 'default', {
+        const result = await gk.webhooks.create({
       name: options.name,
       url: options.url,
       events: options.events,
-      secret: options.secret
+      secret: options.secret,
+      project: options.project || config.defaultProject
         });
 
         formatOutput(result, options.json);
@@ -46,7 +47,7 @@ export function createWebhooksCommand(): Command {
   webhooks
     .command('list')
     .description('List all webhooks for a project')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -61,7 +62,7 @@ export function createWebhooksCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.webhooks.list(options.projectSlug || 'default');
+        const result = await gk.webhooks.list({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -73,7 +74,7 @@ export function createWebhooksCommand(): Command {
     .command('get')
     .description('Get a specific webhook with delivery statistics')
     .option('--webhookId <value>', 'Webhook ID')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--webhookId <value>', 'webhookId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -89,7 +90,7 @@ export function createWebhooksCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.webhooks.get(options.projectSlug || 'default', options.webhookId || 'default');
+        const result = await gk.webhooks.get(options.webhookId, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -105,7 +106,7 @@ export function createWebhooksCommand(): Command {
     .option('--url <value>', 'New webhook URL')
     .option('--events <value>', 'New events subscription')
     .option('--isActive <value>', 'Enable or disable webhook')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--webhookId <value>', 'webhookId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -121,11 +122,12 @@ export function createWebhooksCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.webhooks.update(options.projectSlug || 'default', options.webhookId || 'default', {
+        const result = await gk.webhooks.update(options.webhookId, {
       name: options.name,
       url: options.url,
       events: options.events,
-      isActive: options.isActive === 'true' || options.isActive === true
+      isActive: options.isActive !== undefined ? (options.isActive === 'true' || options.isActive === true) : undefined,
+      project: options.project || config.defaultProject
         });
 
         formatOutput(result, options.json);
@@ -138,7 +140,7 @@ export function createWebhooksCommand(): Command {
     .command('delete')
     .description('Delete a webhook')
     .option('--webhookId <value>', 'Webhook ID')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--webhookId <value>', 'webhookId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -154,7 +156,39 @@ export function createWebhooksCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.webhooks.delete(options.projectSlug || 'default', options.webhookId || 'default');
+        const result = await gk.webhooks.delete(options.webhookId, { project: options.project || config.defaultProject });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  webhooks
+    .command('deliveries')
+    .description('List webhook delivery attempts with filtering')
+    .option('--webhookId <value>', 'Webhook ID')
+    .option('--event <value>', 'Filter by event type')
+    .option('--status <value>', 'Filter by delivery status')
+    .option('--limit <value>', 'Number of deliveries to return (1-100)', '50')
+    .option('--offset <value>', 'Number of deliveries to skip', '0')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--webhookId <value>', 'webhookId parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["webhooks:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: webhooks:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.webhooks.deliveries(options.webhookId, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {

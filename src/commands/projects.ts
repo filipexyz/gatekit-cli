@@ -67,13 +67,39 @@ export function createProjectsCommand(): Command {
     });
 
   projects
+    .command('get')
+    .description('Get project details')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["projects:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: projects:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.projects.get({ project: options.project || config.defaultProject });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  projects
     .command('update')
     .description('Update project name, description and settings')
     .option('--name <value>', 'Project name')
     .option('--description <value>', 'Project description')
     .option('--environment <value>', 'Project environment')
     .option('--isDefault <value>', 'Set as default project')
-    .option('--slug <value>', 'slug parameter', undefined)
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -88,12 +114,39 @@ export function createProjectsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.projects.update(options.slug || 'default', {
+        const result = await gk.projects.update({
       name: options.name,
       description: options.description,
       environment: options.environment,
-      isDefault: options.isDefault === 'true' || options.isDefault === true
+      isDefault: options.isDefault !== undefined ? (options.isDefault === 'true' || options.isDefault === true) : undefined,
+      project: options.project || config.defaultProject
         });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  projects
+    .command('delete')
+    .description('Delete a project')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["projects:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: projects:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.projects.delete({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {

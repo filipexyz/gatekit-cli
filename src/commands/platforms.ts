@@ -16,8 +16,8 @@ export function createPlatformsCommand(): Command {
     .option('--description <value>', 'Optional description for the platform instance')
     .option('--credentials <value>', 'Platform credentials (JSON object). Use "gatekit platforms supported" to see required fields for each platform.')
     .option('--isActive <value>', 'Enable platform', 'true')
-    .option('--testMode <value>', 'Enable test mode')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--testMode <value>', 'Enable test mode', 'false')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -32,13 +32,14 @@ export function createPlatformsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platforms.create(options.projectSlug || 'default', {
+        const result = await gk.platforms.create({
       platform: options.platform,
       name: options.name,
       description: options.description,
       credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
-      isActive: options.isActive === 'true' || options.isActive === true,
-      testMode: options.testMode === 'true' || options.testMode === true
+      isActive: options.isActive !== undefined ? (options.isActive === 'true' || options.isActive === true) : undefined,
+      testMode: options.testMode !== undefined ? (options.testMode === 'true' || options.testMode === true) : undefined,
+      project: options.project || config.defaultProject
         });
 
         formatOutput(result, options.json);
@@ -50,7 +51,7 @@ export function createPlatformsCommand(): Command {
   platforms
     .command('list')
     .description('List configured platforms for project')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -65,7 +66,7 @@ export function createPlatformsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platforms.list(options.projectSlug || 'default');
+        const result = await gk.platforms.list({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -77,7 +78,7 @@ export function createPlatformsCommand(): Command {
     .command('get')
     .description('Get platform configuration details')
     .option('--id <value>', 'Platform ID')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -93,7 +94,7 @@ export function createPlatformsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platforms.get(options.projectSlug || 'default', options.id || 'default');
+        const result = await gk.platforms.get(options.id, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -109,7 +110,7 @@ export function createPlatformsCommand(): Command {
     .option('--credentials <value>', 'Updated credentials (JSON object)')
     .option('--isActive <value>', 'Enable/disable platform')
     .option('--testMode <value>', 'Enable/disable test mode')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -125,12 +126,13 @@ export function createPlatformsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platforms.update(options.projectSlug || 'default', options.id || 'default', {
+        const result = await gk.platforms.update(options.id, {
       name: options.name,
       description: options.description,
       credentials: options.credentials ? JSON.parse(options.credentials) : undefined,
-      isActive: options.isActive === 'true' || options.isActive === true,
-      testMode: options.testMode === 'true' || options.testMode === true
+      isActive: options.isActive !== undefined ? (options.isActive === 'true' || options.isActive === true) : undefined,
+      testMode: options.testMode !== undefined ? (options.testMode === 'true' || options.testMode === true) : undefined,
+      project: options.project || config.defaultProject
         });
 
         formatOutput(result, options.json);
@@ -143,7 +145,7 @@ export function createPlatformsCommand(): Command {
     .command('delete')
     .description('Remove platform configuration')
     .option('--id <value>', 'Platform ID')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -159,7 +161,7 @@ export function createPlatformsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platforms.delete(options.projectSlug || 'default', options.id || 'default');
+        const result = await gk.platforms.delete(options.id, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -171,7 +173,7 @@ export function createPlatformsCommand(): Command {
     .command('register-webhook')
     .description('Register webhook URL with platform provider')
     .option('--id <value>', 'Platform ID')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -187,7 +189,7 @@ export function createPlatformsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platforms.registerWebhook(options.projectSlug || 'default', options.id || 'default');
+        const result = await gk.platforms.registerWebhook(options.id, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -199,7 +201,7 @@ export function createPlatformsCommand(): Command {
     .command('qr-code')
     .description('Get QR code for WhatsApp authentication')
     .option('--id <value>', 'WhatsApp Platform ID')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -215,7 +217,7 @@ export function createPlatformsCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.platforms.qrCode(options.projectSlug || 'default', options.id || 'default');
+        const result = await gk.platforms.qrCode(options.id, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {

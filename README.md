@@ -20,24 +20,31 @@ export GATEKIT_API_URL="https://api.gatekit.dev"
 ```bash
 # Production
 export GATEKIT_API_URL="https://api.gatekit.dev"
+export GATEKIT_DEFAULT_PROJECT="my-project"
 
 # Local development
 export GATEKIT_API_URL="http://localhost:3000"
+export GATEKIT_DEFAULT_PROJECT="default"
 ```
 
 ## Quick Start
 
 ```bash
-# Send a message with simplified pattern
-gatekit messages send --projectSlug my-project \
+# Send a message (uses GATEKIT_DEFAULT_PROJECT if set)
+gatekit messages send \
   --target "platformId:user:123" \
   --text "Hello from GateKit!"
 
-# List received messages
-gatekit messages list --projectSlug my-project --limit 10
+# Or specify project explicitly
+gatekit messages send --project my-project-id \
+  --target "platformId:user:123" \
+  --text "Hello from GateKit!"
 
-# Get message statistics
-gatekit messages stats --projectSlug my-project
+# List received messages (uses default project)
+gatekit messages list --limit 10
+
+# Get message statistics for specific project
+gatekit messages stats --project production-project-id
 ```
 
 ## Revolutionary Pattern System
@@ -103,9 +110,9 @@ gatekit projects create --name "My Project"
 gatekit projects list
 ```
 
-### Update project name, description and settings
+### Get project details
 ```bash
-gatekit projects update my-project --name "New Project Name"
+gatekit projects get my-project
 ```
 
 ## Platforms
@@ -140,6 +147,30 @@ gatekit messages stats
 ### Get a specific message by ID
 ```bash
 gatekit messages get --messageId "msg-123"
+```
+
+## Identities
+
+### Create a new identity with platform aliases
+```bash
+gatekit identities create --displayName "John Doe" --email "john@example.com" --aliases '[{"platformId":"platform-123","providerUserId":"discord-456","providerUserDisplay":"JohnD#1234"}]'
+```
+
+### List all identities for a project
+```bash
+gatekit identities list
+```
+
+### Lookup identity by platform user ID
+```bash
+gatekit identities lookup --platformId platform-123 --providerUserId discord-456
+```
+
+## Auth
+
+### Get current authentication context and permissions
+```bash
+gatekit auth whoami --help
 ```
 
 ## ApiKeys
@@ -192,7 +223,7 @@ gatekit auth whoami
 
 ### Complex Content
 ```bash
-gatekit messages send --projectSlug my-project \
+gatekit messages send --project my-project \
   --target "platformId:user:123" \
   --content '{"text":"Hello","buttons":[{"text":"Click me"}]}'
 ```

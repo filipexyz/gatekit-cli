@@ -1,27 +1,52 @@
-// Generated Messages commands for GateKit CLI
+// Generated Identities commands for GateKit CLI
 // DO NOT EDIT - This file is auto-generated from backend contracts
 
 import { Command } from 'commander';
 import { GateKit } from '@gatekit/sdk';
 import { loadConfig, formatOutput, handleError } from '../lib/utils';
 
-export function createMessagesCommand(): Command {
-  const messages = new Command('messages');
+export function createIdentitiesCommand(): Command {
+  const identities = new Command('identities');
 
-  messages
+  identities
+    .command('create')
+    .description('Create a new identity with platform aliases')
+    .option('--displayName <value>', 'Display name for the identity')
+    .option('--email <value>', 'Email address for the identity')
+    .option('--metadata <value>', 'JSON metadata for the identity')
+    .option('--aliases <value>', 'JSON array of platform aliases')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["identities:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: identities:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.identities.create({
+      displayName: options.displayName,
+      email: options.email,
+      metadata: options.metadata,
+      aliases: options.aliases,
+      project: options.project || config.defaultProject
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  identities
     .command('list')
-    .description('List received messages for a project')
-    .option('--platformId <value>', 'Filter by platform ID')
-    .option('--platform <value>', 'Filter by platform type (telegram, discord, whatsapp-evo)')
-    .option('--chatId <value>', 'Filter by chat/channel ID')
-    .option('--userId <value>', 'Filter by user ID')
-    .option('--startDate <value>', 'Filter messages after this date (ISO 8601)')
-    .option('--endDate <value>', 'Filter messages before this date (ISO 8601)')
-    .option('--limit <value>', 'Number of messages to return (1-100)', '50')
-    .option('--offset <value>', 'Number of messages to skip', '0')
-    .option('--order <value>', 'Sort order (asc or desc)', 'desc')
-    .option('--raw <value>', 'Include raw platform message data', 'false')
-    .option('--reactions <value>', 'Include reactions on each message', 'false')
+    .description('List all identities for a project')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -29,28 +54,15 @@ export function createMessagesCommand(): Command {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:read"]);
+        const hasPermission = await checkPermissions(config, ["identities:read"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:read');
+          console.error('❌ Insufficient permissions. Required: identities:read');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.messages.list({
-      platformId: options.platformId,
-      platform: options.platform,
-      chatId: options.chatId,
-      userId: options.userId,
-      startDate: options.startDate,
-      endDate: options.endDate,
-      limit: options.limit ? parseInt(options.limit) : undefined,
-      offset: options.offset ? parseInt(options.offset) : undefined,
-      order: options.order,
-      raw: options.raw !== undefined ? (options.raw === 'true' || options.raw === true) : undefined,
-      reactions: options.reactions !== undefined ? (options.reactions === 'true' || options.reactions === true) : undefined,
-      project: options.project || config.defaultProject
-        });
+        const result = await gk.identities.list({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -58,9 +70,11 @@ export function createMessagesCommand(): Command {
       }
     });
 
-  messages
-    .command('stats')
-    .description('Get message statistics for a project')
+  identities
+    .command('lookup')
+    .description('Lookup identity by platform user ID')
+    .option('--platformId <value>', 'Platform configuration ID')
+    .option('--providerUserId <value>', 'Provider-specific user ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -68,15 +82,15 @@ export function createMessagesCommand(): Command {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:read"]);
+        const hasPermission = await checkPermissions(config, ["identities:read"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:read');
+          console.error('❌ Insufficient permissions. Required: identities:read');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.messages.stats({ project: options.project || config.defaultProject });
+        const result = await gk.identities.lookup({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -84,27 +98,27 @@ export function createMessagesCommand(): Command {
       }
     });
 
-  messages
+  identities
     .command('get')
-    .description('Get a specific message by ID')
-    .option('--messageId <value>', 'Message ID')
+    .description('Get a specific identity by ID')
+    .option('--id <value>', 'Identity ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--messageId <value>', 'messageId parameter', undefined)
+    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:read"]);
+        const hasPermission = await checkPermissions(config, ["identities:read"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:read');
+          console.error('❌ Insufficient permissions. Required: identities:read');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.messages.get(options.messageId, { project: options.project || config.defaultProject });
+        const result = await gk.identities.get(options.id, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -112,176 +126,33 @@ export function createMessagesCommand(): Command {
       }
     });
 
-  messages
-    .command('cleanup')
-    .description('Delete messages older than specified days')
-    .option('--daysBefore <value>', 'Delete messages older than this many days')
+  identities
+    .command('update')
+    .description('Update identity metadata (display name, email, metadata)')
+    .option('--id <value>', 'Identity ID')
+    .option('--displayName <value>', 'Updated display name')
+    .option('--email <value>', 'Updated email address')
+    .option('--metadata <value>', 'Updated JSON metadata')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:write"]);
+        const hasPermission = await checkPermissions(config, ["identities:write"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:write');
+          console.error('❌ Insufficient permissions. Required: identities:write');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.messages.cleanup({ project: options.project || config.defaultProject });
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  messages
-    .command('send')
-    .description('Send a message to platforms')
-    .option('--target <value>', 'Single target in format: platformId:type:id')
-    .option('--targets <value>', 'Multiple targets comma-separated: platformId:type:id,platformId:type:id')
-    .option('--text <value>', 'Message text content')
-    .option('--content <value>', 'Full message content object (advanced)')
-    .option('--options <value>', 'Message options')
-    .option('--metadata <value>', 'Message metadata')
-    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:send"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:send');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.messages.send(buildMessageDto(options));
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  messages
-    .command('status')
-    .description('Check message delivery status')
-    .option('--jobId <value>', 'Message job ID')
-    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--jobId <value>', 'jobId parameter', undefined)
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:read"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:read');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.messages.status(options.jobId, { project: options.project || config.defaultProject });
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  messages
-    .command('retry')
-    .description('Retry a failed message')
-    .option('--jobId <value>', 'Failed message job ID')
-    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--jobId <value>', 'jobId parameter', undefined)
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:send"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:send');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.messages.retry(options.jobId, { project: options.project || config.defaultProject });
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  messages
-    .command('sent')
-    .description('List sent messages for a project')
-    .option('--platform <value>', 'Filter by platform')
-    .option('--status <value>', 'Filter by status (pending, sent, failed)')
-    .option('--limit <value>', 'Number of messages to return', '50')
-    .option('--offset <value>', 'Number of messages to skip', '0')
-    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:read"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:read');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.messages.sent({ project: options.project || config.defaultProject });
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  messages
-    .command('react')
-    .description('Add a reaction to a message')
-    .option('--platformId <value>', 'Platform configuration ID')
-    .option('--messageId <value>', 'Message ID to react to')
-    .option('--emoji <value>', 'Emoji to react with (e.g., "👍", "❤️")')
-    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:send"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:send');
-          process.exit(1);
-        }
-
-        const gk = new GateKit(config);
-
-        const result = await gk.messages.react({
-      platformId: options.platformId,
-      messageId: options.messageId,
-      emoji: options.emoji,
+        const result = await gk.identities.update(options.id, {
+      displayName: options.displayName,
+      email: options.email,
+      metadata: options.metadata,
       project: options.project || config.defaultProject
         });
 
@@ -291,31 +162,33 @@ export function createMessagesCommand(): Command {
       }
     });
 
-  messages
-    .command('unreact')
-    .description('Remove a reaction from a message')
+  identities
+    .command('add-alias')
+    .description('Add a platform alias to an existing identity')
+    .option('--id <value>', 'Identity ID')
     .option('--platformId <value>', 'Platform configuration ID')
-    .option('--messageId <value>', 'Message ID to unreact from')
-    .option('--emoji <value>', 'Emoji to remove (e.g., "👍", "❤️")')
+    .option('--providerUserId <value>', 'Provider-specific user ID')
+    .option('--providerUserDisplay <value>', 'Display name on the platform')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
         const config = await loadConfig();
 
         // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:send"]);
+        const hasPermission = await checkPermissions(config, ["identities:write"]);
         if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:send');
+          console.error('❌ Insufficient permissions. Required: identities:write');
           process.exit(1);
         }
 
         const gk = new GateKit(config);
 
-        const result = await gk.messages.unreact({
+        const result = await gk.identities.addAlias(options.id, {
       platformId: options.platformId,
-      messageId: options.messageId,
-      emoji: options.emoji,
+      providerUserId: options.providerUserId,
+      providerUserDisplay: options.providerUserDisplay,
       project: options.project || config.defaultProject
         });
 
@@ -325,7 +198,121 @@ export function createMessagesCommand(): Command {
       }
     });
 
-  return messages;
+  identities
+    .command('remove-alias')
+    .description('Remove a platform alias from an identity')
+    .option('--id <value>', 'Identity ID')
+    .option('--aliasId <value>', 'Alias ID to remove')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--aliasId <value>', 'aliasId parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["identities:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: identities:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.identities.removeAlias(options.id, options.aliasId, { project: options.project || config.defaultProject });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  identities
+    .command('delete')
+    .description('Delete an identity and all its aliases')
+    .option('--id <value>', 'Identity ID to delete')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["identities:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: identities:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.identities.delete(options.id, { project: options.project || config.defaultProject });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  identities
+    .command('messages')
+    .description('Get all messages for an identity (across all linked platform accounts)')
+    .option('--id <value>', 'Identity ID')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["identities:read","messages:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: identities:read, messages:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.identities.messages(options.id, { project: options.project || config.defaultProject });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  identities
+    .command('reactions')
+    .description('Get all reactions for an identity (across all linked platform accounts)')
+    .option('--id <value>', 'Identity ID')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--id <value>', 'id parameter', undefined)
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["identities:read","messages:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: identities:read, messages:read');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.identities.reactions(options.id, { project: options.project || config.defaultProject });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  return identities;
 }
 
 

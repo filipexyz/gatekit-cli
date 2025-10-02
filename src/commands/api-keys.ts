@@ -14,7 +14,7 @@ export function createApikeysCommand(): Command {
     .option('--name <value>', 'API key name')
     .option('--scopes <value>', 'Comma-separated scopes')
     .option('--expiresInDays <value>', 'Expiration in days')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -29,10 +29,11 @@ export function createApikeysCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.apikeys.create(options.projectSlug || 'default', {
+        const result = await gk.apikeys.create({
       name: options.name,
       scopes: options.scopes,
-      expiresInDays: options.expiresInDays ? parseInt(options.expiresInDays) : undefined
+      expiresInDays: options.expiresInDays ? parseInt(options.expiresInDays) : undefined,
+      project: options.project || config.defaultProject
         });
 
         formatOutput(result, options.json);
@@ -44,7 +45,7 @@ export function createApikeysCommand(): Command {
   apikeys
     .command('list')
     .description('List all API keys for project')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -59,7 +60,7 @@ export function createApikeysCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.apikeys.list(options.projectSlug || 'default');
+        const result = await gk.apikeys.list({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -71,7 +72,7 @@ export function createApikeysCommand(): Command {
     .command('revoke')
     .description('Revoke an API key')
     .option('--keyId <value>', 'API key ID to revoke')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--keyId <value>', 'keyId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -87,7 +88,7 @@ export function createApikeysCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.apikeys.revoke(options.projectSlug || 'default', options.keyId || 'default');
+        const result = await gk.apikeys.revoke(options.keyId, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
@@ -99,7 +100,7 @@ export function createApikeysCommand(): Command {
     .command('roll')
     .description('Roll an API key (generate new key, revoke old after 24h)')
     .option('--keyId <value>', 'API key ID to roll')
-    .option('--projectSlug <value>', 'projectSlug parameter', 'default')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
     .option('--keyId <value>', 'keyId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -115,7 +116,7 @@ export function createApikeysCommand(): Command {
 
         const gk = new GateKit(config);
 
-        const result = await gk.apikeys.roll(options.projectSlug || 'default', options.keyId || 'default');
+        const result = await gk.apikeys.roll(options.keyId, { project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
