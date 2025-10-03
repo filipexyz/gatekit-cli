@@ -75,7 +75,6 @@ export function createWebhooksCommand(): Command {
     .description('Get a specific webhook with delivery statistics')
     .option('--webhookId <value>', 'Webhook ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--webhookId <value>', 'webhookId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -107,7 +106,6 @@ export function createWebhooksCommand(): Command {
     .option('--events <value>', 'New events subscription')
     .option('--isActive <value>', 'Enable or disable webhook')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--webhookId <value>', 'webhookId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -141,7 +139,6 @@ export function createWebhooksCommand(): Command {
     .description('Delete a webhook')
     .option('--webhookId <value>', 'Webhook ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--webhookId <value>', 'webhookId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -173,7 +170,6 @@ export function createWebhooksCommand(): Command {
     .option('--limit <value>', 'Number of deliveries to return (1-100)', '50')
     .option('--offset <value>', 'Number of deliveries to skip', '0')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--webhookId <value>', 'webhookId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {

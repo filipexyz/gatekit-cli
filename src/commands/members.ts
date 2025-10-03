@@ -72,7 +72,6 @@ export function createMembersCommand(): Command {
     .option('--userId <value>', 'User ID of the member to update')
     .option('--role <value>', 'New role to assign')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--userId <value>', 'userId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -103,7 +102,6 @@ export function createMembersCommand(): Command {
     .description('Remove a member from a project')
     .option('--userId <value>', 'User ID of the member to remove')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--userId <value>', 'userId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {

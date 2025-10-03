@@ -1,7 +1,8 @@
 // Generated config management for GateKit CLI
 // DO NOT EDIT - This file is auto-generated
 
-import * as fs from 'fs';
+import * as fsSync from 'fs';
+import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
 
@@ -14,24 +15,83 @@ interface CLIConfig {
 }
 
 export async function loadConfig(): Promise<CLIConfig> {
+  // Start with defaults
   const config: CLIConfig = {
-    apiUrl: process.env.GATEKIT_API_URL || 'https://api.gatekit.dev',
-    apiKey: process.env.GATEKIT_API_KEY,
-    jwtToken: process.env.GATEKIT_JWT_TOKEN,
-    defaultProject: process.env.GATEKIT_DEFAULT_PROJECT,
-    outputFormat: (process.env.GATEKIT_OUTPUT_FORMAT as any) || 'table',
+    apiUrl: 'https://api.gatekit.dev',
+    outputFormat: 'table',
   };
 
-  // Try to load from config file
+  // Load from config file (if exists)
   try {
     const configPath = path.join(os.homedir(), '.gatekit', 'config.json');
-    const fileConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    const fileConfig = JSON.parse(fsSync.readFileSync(configPath, 'utf-8'));
     Object.assign(config, fileConfig);
   } catch {
-    // Config file doesn't exist or is invalid - use environment/defaults
+    // Config file doesn't exist or is invalid - use defaults
   }
 
+  // Environment variables override config file
+  if (process.env.GATEKIT_API_URL) config.apiUrl = process.env.GATEKIT_API_URL;
+  if (process.env.GATEKIT_API_KEY) config.apiKey = process.env.GATEKIT_API_KEY;
+  if (process.env.GATEKIT_JWT_TOKEN) config.jwtToken = process.env.GATEKIT_JWT_TOKEN;
+  if (process.env.GATEKIT_DEFAULT_PROJECT) config.defaultProject = process.env.GATEKIT_DEFAULT_PROJECT;
+  if (process.env.GATEKIT_OUTPUT_FORMAT) config.outputFormat = process.env.GATEKIT_OUTPUT_FORMAT as any;
+
   return config;
+}
+
+export async function saveConfig(key: string, value: string): Promise<void> {
+  const configDir = path.join(os.homedir(), '.gatekit');
+  const configPath = path.join(configDir, 'config.json');
+
+  // Create directory if it doesn't exist
+  try {
+    await fs.mkdir(configDir, { recursive: true, mode: 0o700 });
+  } catch (err) {
+    throw new Error(`Failed to create config directory: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
+  // Load existing config or start fresh
+  let config: Record<string, any> = {};
+  try {
+    const existing = await fs.readFile(configPath, 'utf-8');
+    config = JSON.parse(existing);
+  } catch {
+    // File doesn't exist yet, that's ok
+  }
+
+  // Update the specific key
+  config[key] = value;
+
+  // Write config file with restricted permissions
+  try {
+    await fs.writeFile(configPath, JSON.stringify(config, null, 2), { mode: 0o600 });
+  } catch (err) {
+    throw new Error(`Failed to write config file: ${err instanceof Error ? err.message : String(err)}`);
+  }
+}
+
+export async function getConfigValue(key: string): Promise<string | undefined> {
+  const configPath = path.join(os.homedir(), '.gatekit', 'config.json');
+
+  try {
+    const configContent = await fs.readFile(configPath, 'utf-8');
+    const config = JSON.parse(configContent);
+    return config[key];
+  } catch {
+    return undefined;
+  }
+}
+
+export async function listConfig(): Promise<Record<string, any>> {
+  const configPath = path.join(os.homedir(), '.gatekit', 'config.json');
+
+  try {
+    const configContent = await fs.readFile(configPath, 'utf-8');
+    return JSON.parse(configContent);
+  } catch {
+    return {};
+  }
 }
 
 export function formatOutput(data: any, json: boolean = false): void {

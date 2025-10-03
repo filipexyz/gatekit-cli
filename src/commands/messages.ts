@@ -89,7 +89,6 @@ export function createMessagesCommand(): Command {
     .description('Get a specific message by ID')
     .option('--messageId <value>', 'Message ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--messageId <value>', 'messageId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -176,7 +175,6 @@ export function createMessagesCommand(): Command {
     .description('Check message delivery status')
     .option('--jobId <value>', 'Message job ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--jobId <value>', 'jobId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -204,7 +202,6 @@ export function createMessagesCommand(): Command {
     .description('Retry a failed message')
     .option('--jobId <value>', 'Failed message job ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--jobId <value>', 'jobId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {

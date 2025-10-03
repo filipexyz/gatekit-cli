@@ -73,7 +73,6 @@ export function createApikeysCommand(): Command {
     .description('Revoke an API key')
     .option('--keyId <value>', 'API key ID to revoke')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--keyId <value>', 'keyId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -101,7 +100,6 @@ export function createApikeysCommand(): Command {
     .description('Roll an API key (generate new key, revoke old after 24h)')
     .option('--keyId <value>', 'API key ID to roll')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--keyId <value>', 'keyId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
