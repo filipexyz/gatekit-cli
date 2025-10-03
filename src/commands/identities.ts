@@ -103,7 +103,6 @@ export function createIdentitiesCommand(): Command {
     .description('Get a specific identity by ID')
     .option('--id <value>', 'Identity ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -134,7 +133,6 @@ export function createIdentitiesCommand(): Command {
     .option('--email <value>', 'Updated email address')
     .option('--metadata <value>', 'Updated JSON metadata')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -170,7 +168,6 @@ export function createIdentitiesCommand(): Command {
     .option('--providerUserId <value>', 'Provider-specific user ID')
     .option('--providerUserDisplay <value>', 'Display name on the platform')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -204,8 +201,6 @@ export function createIdentitiesCommand(): Command {
     .option('--id <value>', 'Identity ID')
     .option('--aliasId <value>', 'Alias ID to remove')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
-    .option('--aliasId <value>', 'aliasId parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -233,7 +228,6 @@ export function createIdentitiesCommand(): Command {
     .description('Delete an identity and all its aliases')
     .option('--id <value>', 'Identity ID to delete')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -261,7 +255,6 @@ export function createIdentitiesCommand(): Command {
     .description('Get all messages for an identity (across all linked platform accounts)')
     .option('--id <value>', 'Identity ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -289,7 +282,6 @@ export function createIdentitiesCommand(): Command {
     .description('Get all reactions for an identity (across all linked platform accounts)')
     .option('--id <value>', 'Identity ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {

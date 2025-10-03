@@ -1,6 +1,6 @@
 {
   "name": "@gatekit/cli",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Official CLI for GateKit universal messaging gateway",
   "main": "dist/index.js",
   "bin": {
@@ -14,7 +14,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@gatekit/sdk": "^1.2.1",
+    "@gatekit/sdk": "^1.2.2",
     "commander": "^14.0.1",
     "axios": "^1.12.2"
   },

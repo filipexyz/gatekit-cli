@@ -79,7 +79,6 @@ export function createPlatformsCommand(): Command {
     .description('Get platform configuration details')
     .option('--id <value>', 'Platform ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -146,7 +145,6 @@ export function createPlatformsCommand(): Command {
     .description('Remove platform configuration')
     .option('--id <value>', 'Platform ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -174,7 +172,6 @@ export function createPlatformsCommand(): Command {
     .description('Register webhook URL with platform provider')
     .option('--id <value>', 'Platform ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -202,7 +199,6 @@ export function createPlatformsCommand(): Command {
     .description('Get QR code for WhatsApp authentication')
     .option('--id <value>', 'WhatsApp Platform ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
-    .option('--id <value>', 'id parameter', undefined)
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
