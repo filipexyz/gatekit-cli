@@ -14,7 +14,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@gatekit/sdk": "^1.2.2",
+    "@gatekit/sdk": "latest",
     "commander": "^14.0.1",
     "axios": "^1.12.2"
   },
