@@ -4,6 +4,7 @@
 import { Command } from 'commander';
 import { GateKit } from '@gatekit/sdk';
 import { loadConfig, formatOutput, handleError } from '../lib/utils';
+import { buildMessageDto } from '../lib/message-utils';
 
 export function createMessagesCommand(): Command {
   const messages = new Command('messages');
@@ -23,6 +24,10 @@ export function createMessagesCommand(): Command {
     .option('--raw <value>', 'Include raw platform message data', 'false')
     .option('--reactions <value>', 'Include reactions on each message', 'false')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -62,6 +67,10 @@ export function createMessagesCommand(): Command {
     .command('stats')
     .description('Get message statistics for a project')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -89,6 +98,10 @@ export function createMessagesCommand(): Command {
     .description('Get a specific message by ID')
     .option('--messageId <value>', 'Message ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -116,6 +129,10 @@ export function createMessagesCommand(): Command {
     .description('Delete messages older than specified days')
     .option('--daysBefore <value>', 'Delete messages older than this many days')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -148,6 +165,10 @@ export function createMessagesCommand(): Command {
     .option('--options <value>', 'Message options')
     .option('--metadata <value>', 'Message metadata')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -175,6 +196,10 @@ export function createMessagesCommand(): Command {
     .description('Check message delivery status')
     .option('--jobId <value>', 'Message job ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -202,6 +227,10 @@ export function createMessagesCommand(): Command {
     .description('Retry a failed message')
     .option('--jobId <value>', 'Failed message job ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -232,6 +261,10 @@ export function createMessagesCommand(): Command {
     .option('--limit <value>', 'Number of messages to return', '50')
     .option('--offset <value>', 'Number of messages to skip', '0')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -261,6 +294,10 @@ export function createMessagesCommand(): Command {
     .option('--messageId <value>', 'Message ID to react to')
     .option('--emoji <value>', 'Emoji to react with (e.g., "👍", "❤️")')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -295,6 +332,10 @@ export function createMessagesCommand(): Command {
     .option('--messageId <value>', 'Message ID to unreact from')
     .option('--emoji <value>', 'Emoji to remove (e.g., "👍", "❤️")')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -325,67 +366,6 @@ export function createMessagesCommand(): Command {
   return messages;
 }
 
-
-// Target pattern parsing helpers
-function parseTargetPattern(pattern: string): { platformId: string; type: string; id: string } {
-  const parts = pattern.split(':');
-  if (parts.length !== 3) {
-    throw new Error('Invalid target pattern. Expected format: platformId:type:id');
-  }
-
-  const [platformId, type, id] = parts;
-
-  if (!['user', 'channel', 'group'].includes(type)) {
-    throw new Error('Invalid target type. Must be: user, channel, or group');
-  }
-
-  return { platformId, type, id };
-}
-
-function parseTargetsPattern(pattern: string): Array<{ platformId: string; type: string; id: string }> {
-  const patterns = pattern.split(',').map(p => p.trim());
-  return patterns.map(parseTargetPattern);
-}
-
-function buildMessageDto(options: any): any {
-  const dto: any = {};
-
-  // Handle targets - priority: targets pattern > target pattern > content object
-  if (options.targets) {
-    dto.targets = parseTargetsPattern(options.targets);
-  } else if (options.target) {
-    dto.targets = [parseTargetPattern(options.target)];
-  }
-
-  // Handle content - priority: text shortcut > content object
-  if (options.text) {
-    dto.content = { text: options.text };
-  } else if (options.content) {
-    try {
-      dto.content = JSON.parse(options.content);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --content: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  // Handle optional fields with error handling
-  if (options.options) {
-    try {
-      dto.options = JSON.parse(options.options);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --options: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-  if (options.metadata) {
-    try {
-      dto.metadata = JSON.parse(options.metadata);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --metadata: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  return dto;
-}
 
 async function checkPermissions(config: any, requiredScopes: string[]): Promise<boolean> {
   try {
