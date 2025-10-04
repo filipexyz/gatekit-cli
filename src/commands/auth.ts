@@ -5,8 +5,63 @@ import { Command } from 'commander';
 import { GateKit } from '@gatekit/sdk';
 import { loadConfig, formatOutput, handleError } from '../lib/utils';
 
+
 export function createAuthCommand(): Command {
   const auth = new Command('auth');
+
+  auth
+    .command('signup')
+    .description('Create a new user account (first user becomes admin)')
+    .option('--email <value>', 'Email address')
+    .option('--password <value>', 'Password (min 8 chars, 1 uppercase, 1 number)')
+    .option('--name <value>', 'Full name')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        // No permissions required for this command
+
+        const gk = new GateKit(config);
+
+        const result = await gk.auth.signup({
+      email: options.email,
+      password: options.password,
+      name: options.name
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  auth
+    .command('login')
+    .description('Login with email and password')
+    .option('--email <value>', 'Email address')
+    .option('--password <value>', 'Password')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        // No permissions required for this command
+
+        const gk = new GateKit(config);
+
+        const result = await gk.auth.login({
+      email: options.email,
+      password: options.password
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
 
   auth
     .command('whoami')
@@ -33,67 +88,6 @@ export function createAuthCommand(): Command {
   return auth;
 }
 
-
-// Target pattern parsing helpers
-function parseTargetPattern(pattern: string): { platformId: string; type: string; id: string } {
-  const parts = pattern.split(':');
-  if (parts.length !== 3) {
-    throw new Error('Invalid target pattern. Expected format: platformId:type:id');
-  }
-
-  const [platformId, type, id] = parts;
-
-  if (!['user', 'channel', 'group'].includes(type)) {
-    throw new Error('Invalid target type. Must be: user, channel, or group');
-  }
-
-  return { platformId, type, id };
-}
-
-function parseTargetsPattern(pattern: string): Array<{ platformId: string; type: string; id: string }> {
-  const patterns = pattern.split(',').map(p => p.trim());
-  return patterns.map(parseTargetPattern);
-}
-
-function buildMessageDto(options: any): any {
-  const dto: any = {};
-
-  // Handle targets - priority: targets pattern > target pattern > content object
-  if (options.targets) {
-    dto.targets = parseTargetsPattern(options.targets);
-  } else if (options.target) {
-    dto.targets = [parseTargetPattern(options.target)];
-  }
-
-  // Handle content - priority: text shortcut > content object
-  if (options.text) {
-    dto.content = { text: options.text };
-  } else if (options.content) {
-    try {
-      dto.content = JSON.parse(options.content);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --content: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  // Handle optional fields with error handling
-  if (options.options) {
-    try {
-      dto.options = JSON.parse(options.options);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --options: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-  if (options.metadata) {
-    try {
-      dto.metadata = JSON.parse(options.metadata);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --metadata: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  return dto;
-}
 
 async function checkPermissions(config: any, requiredScopes: string[]): Promise<boolean> {
   try {

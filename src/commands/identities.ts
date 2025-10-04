@@ -5,6 +5,7 @@ import { Command } from 'commander';
 import { GateKit } from '@gatekit/sdk';
 import { loadConfig, formatOutput, handleError } from '../lib/utils';
 
+
 export function createIdentitiesCommand(): Command {
   const identities = new Command('identities');
 
@@ -255,6 +256,10 @@ export function createIdentitiesCommand(): Command {
     .description('Get all messages for an identity (across all linked platform accounts)')
     .option('--id <value>', 'Identity ID')
     .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
+    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
+    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
+    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
       try {
@@ -307,67 +312,6 @@ export function createIdentitiesCommand(): Command {
   return identities;
 }
 
-
-// Target pattern parsing helpers
-function parseTargetPattern(pattern: string): { platformId: string; type: string; id: string } {
-  const parts = pattern.split(':');
-  if (parts.length !== 3) {
-    throw new Error('Invalid target pattern. Expected format: platformId:type:id');
-  }
-
-  const [platformId, type, id] = parts;
-
-  if (!['user', 'channel', 'group'].includes(type)) {
-    throw new Error('Invalid target type. Must be: user, channel, or group');
-  }
-
-  return { platformId, type, id };
-}
-
-function parseTargetsPattern(pattern: string): Array<{ platformId: string; type: string; id: string }> {
-  const patterns = pattern.split(',').map(p => p.trim());
-  return patterns.map(parseTargetPattern);
-}
-
-function buildMessageDto(options: any): any {
-  const dto: any = {};
-
-  // Handle targets - priority: targets pattern > target pattern > content object
-  if (options.targets) {
-    dto.targets = parseTargetsPattern(options.targets);
-  } else if (options.target) {
-    dto.targets = [parseTargetPattern(options.target)];
-  }
-
-  // Handle content - priority: text shortcut > content object
-  if (options.text) {
-    dto.content = { text: options.text };
-  } else if (options.content) {
-    try {
-      dto.content = JSON.parse(options.content);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --content: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  // Handle optional fields with error handling
-  if (options.options) {
-    try {
-      dto.options = JSON.parse(options.options);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --options: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-  if (options.metadata) {
-    try {
-      dto.metadata = JSON.parse(options.metadata);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --metadata: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  return dto;
-}
 
 async function checkPermissions(config: any, requiredScopes: string[]): Promise<boolean> {
   try {

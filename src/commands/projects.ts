@@ -5,6 +5,7 @@ import { Command } from 'commander';
 import { GateKit } from '@gatekit/sdk';
 import { loadConfig, formatOutput, handleError } from '../lib/utils';
 
+
 export function createProjectsCommand(): Command {
   const projects = new Command('projects');
 
@@ -157,67 +158,6 @@ export function createProjectsCommand(): Command {
   return projects;
 }
 
-
-// Target pattern parsing helpers
-function parseTargetPattern(pattern: string): { platformId: string; type: string; id: string } {
-  const parts = pattern.split(':');
-  if (parts.length !== 3) {
-    throw new Error('Invalid target pattern. Expected format: platformId:type:id');
-  }
-
-  const [platformId, type, id] = parts;
-
-  if (!['user', 'channel', 'group'].includes(type)) {
-    throw new Error('Invalid target type. Must be: user, channel, or group');
-  }
-
-  return { platformId, type, id };
-}
-
-function parseTargetsPattern(pattern: string): Array<{ platformId: string; type: string; id: string }> {
-  const patterns = pattern.split(',').map(p => p.trim());
-  return patterns.map(parseTargetPattern);
-}
-
-function buildMessageDto(options: any): any {
-  const dto: any = {};
-
-  // Handle targets - priority: targets pattern > target pattern > content object
-  if (options.targets) {
-    dto.targets = parseTargetsPattern(options.targets);
-  } else if (options.target) {
-    dto.targets = [parseTargetPattern(options.target)];
-  }
-
-  // Handle content - priority: text shortcut > content object
-  if (options.text) {
-    dto.content = { text: options.text };
-  } else if (options.content) {
-    try {
-      dto.content = JSON.parse(options.content);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --content: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  // Handle optional fields with error handling
-  if (options.options) {
-    try {
-      dto.options = JSON.parse(options.options);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --options: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-  if (options.metadata) {
-    try {
-      dto.metadata = JSON.parse(options.metadata);
-    } catch (e) {
-      throw new Error(`Invalid JSON for --metadata: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  return dto;
-}
 
 async function checkPermissions(config: any, requiredScopes: string[]): Promise<boolean> {
   try {

@@ -19,7 +19,7 @@ const program = new Command();
 program
   .name('gatekit')
   .description('GateKit Universal Messaging Gateway CLI')
-  .version('1.2.2');
+  .version('1.3.0');
 
 // Config command
 const config = new Command('config');

@@ -80,9 +80,19 @@ gatekit keys revoke --keyId "key-123"
 
 ## Auth
 
+### Create a new user account (first user becomes admin)
+```bash
+gatekit auth signup --email admin@example.com --password Admin123 --name "Admin User"
+```
+
+### Login with email and password
+```bash
+gatekit auth login --email admin@example.com --password Admin123
+```
+
 ### Get current authentication context and permissions
 ```bash
-gatekit auth whoami --help
+gatekit auth whoami
 ```
 
 ## Identities
