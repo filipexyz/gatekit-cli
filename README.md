@@ -90,9 +90,9 @@ gatekit auth signup --email admin@example.com --password Admin123 --name "Admin 
 gatekit auth login --email admin@example.com --password Admin123
 ```
 
-### Get current authentication context and permissions
+### Accept a project invitation and create account
 ```bash
-gatekit auth whoami
+gatekit auth accept-invite --token abc123... --name "John Doe" --password SecurePass123
 ```
 
 ## Identities
@@ -141,9 +141,9 @@ gatekit messages list
 gatekit messages stats
 ```
 
-### Get a specific message by ID
+### List sent messages for a project
 ```bash
-gatekit messages get --messageId "msg-123"
+gatekit messages sent
 ```
 
 ## Platform Logs

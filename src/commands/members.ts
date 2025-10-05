@@ -125,6 +125,36 @@ export function createMembersCommand(): Command {
       }
     });
 
+  members
+    .command('invite')
+    .description('Invite a user to join a project')
+    .option('--email <value>', 'Email address of user to invite')
+    .option('--project <value>', 'Project (uses GATEKIT_DEFAULT_PROJECT if not provided)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["members:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: members:write');
+          process.exit(1);
+        }
+
+        const gk = new GateKit(config);
+
+        const result = await gk.members.invite({
+      email: options.email,
+      project: options.project || config.defaultProject
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
   return members;
 }
 
