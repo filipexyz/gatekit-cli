@@ -34,7 +34,7 @@ export function createWebhooksCommand(): Command {
         const result = await gk.webhooks.create({
       name: options.name,
       url: options.url,
-      events: options.events,
+      events: options.events ? (typeof options.events === 'string' ? options.events.split(',').map((v: string) => v.trim()) : options.events) : undefined,
       secret: options.secret,
       project: options.project || config.defaultProject
         });
@@ -124,7 +124,7 @@ export function createWebhooksCommand(): Command {
         const result = await gk.webhooks.update(options.webhookId, {
       name: options.name,
       url: options.url,
-      events: options.events,
+      events: options.events ? (typeof options.events === 'string' ? options.events.split(',').map((v: string) => v.trim()) : options.events) : undefined,
       isActive: options.isActive !== undefined ? (options.isActive === 'true' || options.isActive === true) : undefined,
       project: options.project || config.defaultProject
         });

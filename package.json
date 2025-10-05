@@ -1,6 +1,6 @@
 {
   "name": "@gatekit/cli",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Official CLI for GateKit universal messaging gateway",
   "main": "dist/index.js",
   "bin": {
