@@ -64,6 +64,34 @@ export function createAuthCommand(): Command {
     });
 
   auth
+    .command('accept-invite')
+    .description('Accept a project invitation and create account')
+    .option('--token <value>', 'Invite token from invitation link')
+    .option('--name <value>', 'Full name')
+    .option('--password <value>', 'Password (min 8 chars, 1 uppercase, 1 number)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        // No permissions required for this command
+
+        const gk = new GateKit(config);
+
+        const result = await gk.auth.acceptInvite({
+      token: options.token,
+      name: options.name,
+      password: options.password
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  auth
     .command('whoami')
     .description('Get current authentication context and permissions')
 
@@ -78,6 +106,32 @@ export function createAuthCommand(): Command {
         const gk = new GateKit(config);
 
         const result = await gk.auth.whoami();
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  auth
+    .command('update-password')
+    .description('Update your password (requires current password)')
+    .option('--currentPassword <value>', 'Current password')
+    .option('--newPassword <value>', 'New password (min 8 chars, 1 uppercase, 1 number)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        // No permissions required for this command
+
+        const gk = new GateKit(config);
+
+        const result = await gk.auth.updatePassword({
+      currentPassword: options.currentPassword,
+      newPassword: options.newPassword
+        });
 
         formatOutput(result, options.json);
       } catch (error) {
